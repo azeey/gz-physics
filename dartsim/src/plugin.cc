@@ -76,15 +76,15 @@ namespace {
 // The solution here is to call the `unregisterAllCreators` function from the
 // plugins translation unit in the hopes that it will force the compiler to keep
 // the destructors.
-struct UnregisterCollisionDetectors
-{
-  ~UnregisterCollisionDetectors()
-  {
-    dart::collision::CollisionDetector::getFactory()->unregisterAllCreators();
-  }
-};
-
-UnregisterCollisionDetectors unregisterAtUnload;
+// struct UnregisterCollisionDetectors
+// {
+//   ~UnregisterCollisionDetectors()
+//   {
+//     dart::collision::CollisionDetector::getFactory()->unregisterAllCreators();
+//   }
+// };
+//
+// UnregisterCollisionDetectors unregisterAtUnload;
 }
 
 GZ_PHYSICS_ADD_PLUGIN(Plugin, FeaturePolicy3d, DartsimFeatures)

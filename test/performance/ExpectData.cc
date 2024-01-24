@@ -117,6 +117,7 @@ double RunPerformanceTest(CompositeType &data)
 // perspective.
 class NaiveCompositionBase
 {
+  public: virtual ~NaiveCompositionBase() = default;
 };
 
 template<typename T>
@@ -246,5 +247,10 @@ TEST(ExpectData, AccessTime)
               << "Avg time: " << std::setw(8) << std::right
               << avgs[i]/static_cast<double>(NumRuns)
               << " ns\n" << std::endl;
+  }
+
+  for (std::size_t i = 0; i < basicComposition.size(); ++i)
+  {
+    delete basicComposition[i];
   }
 }

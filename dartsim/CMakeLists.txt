@@ -79,7 +79,6 @@ gz_build_tests(
   SOURCES ${test_sources}
   LIB_DEPS
     ${features}
-    ${dartsim_plugin}
     gz-plugin${GZ_PLUGIN_VER}::loader
     gz-common${GZ_COMMON_VER}::gz-common${GZ_COMMON_VER}
     gz-common${GZ_COMMON_VER}::geospatial
@@ -111,3 +110,7 @@ foreach(test UNIT_FindFeatures_TEST UNIT_RequestFeatures_TEST)
       "dartsim_plugin_LIB=\"$<TARGET_FILE:${dartsim_plugin}>\"")
   endif()
 endforeach()
+
+if(TARGET UNIT_Base_TEST)
+  target_link_libraries(UNIT_Base_TEST ${dartsim_plugin})
+endif()
