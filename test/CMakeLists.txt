@@ -5,6 +5,12 @@ set(FAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/fake/install")
 
 file(MAKE_DIRECTORY ${FAKE_INSTALL_PREFIX})
 
+# Pass the parent's CMAKE_PREFIX_PATH and CMAKE_INSTALL_PREFIX to the fake install 
+# so it can find dependencies when testing is enabled after a colcon build without sourcing
+# the setup.bash script again.
+set(FAKE_CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}")
+string(REPLACE ";" "|" FAKE_CMAKE_PREFIX_PATH "${FAKE_CMAKE_PREFIX_PATH}")
+
 include(ExternalProject)
 ExternalProject_Add(
   FAKE_INSTALL
@@ -17,6 +23,8 @@ ExternalProject_Add(
   CMAKE_ARGS
     "-DBUILD_TESTING=OFF"
     "-DCMAKE_INSTALL_PREFIX=${FAKE_INSTALL_PREFIX}"
+    "-DCMAKE_PREFIX_PATH=${FAKE_CMAKE_PREFIX_PATH}"
+  LIST_SEPARATOR "|"
 )
 
 add_library(gz-physics-test INTERFACE)
