@@ -42,8 +42,14 @@ endif()
 
 if(TARGET INTEGRATION_ExamplesBuild_TEST)
   add_dependencies(INTEGRATION_ExamplesBuild_TEST FAKE_INSTALL)
-  set(_env_vars)
-  list(APPEND _env_vars "CMAKE_PREFIX_PATH=${FAKE_INSTALL_PREFIX}:$ENV{CMAKE_PREFIX_PATH}")
+
+  # Pass the parent's CMAKE_PREFIX_PATH and CMAKE_INSTALL_PREFIX to the test
+  # environment so it can find dependencies when testing is enabled after a
+  # colcon build without sourcing the setup.bash script again.
+  set(TEST_CMAKE_PREFIX_PATH "${FAKE_INSTALL_PREFIX};${CMAKE_PREFIX_PATH};${CMAKE_INSTALL_PREFIX}")
+
+  # Use ENVIRONMENT_MODIFICATION to correctly handle appending paths cross-platform
+  # using the host's path list separator (':' on Unix, ';' on Windows)
   set_tests_properties(INTEGRATION_ExamplesBuild_TEST PROPERTIES
-    ENVIRONMENT "${_env_vars}")
+    ENVIRONMENT_MODIFICATION "CMAKE_PREFIX_PATH=path_list_prepend:${TEST_CMAKE_PREFIX_PATH}")
 endif()
